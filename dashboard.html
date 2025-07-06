@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Stats by Step</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .dashboard-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+    }
+    .profile-summary {
+      min-width: 220px;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+    }
+    .category-select {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+    }
+    .category-dropdown {
+      border: none;
+      border-radius: 32px;
+      background: #f2f6fd;
+      padding: 0.7rem 1.5rem;
+      font-size: 1.1rem;
+      font-family: inherit;
+      font-weight: 500;
+      color: var(--color-text);
+      box-shadow: 0 2px 8px 0 #e5e7eb;
+      outline: none;
+      margin-top: 0.2rem;
+      transition: box-shadow 0.18s;
+    }
+    .category-dropdown:focus {
+      box-shadow: 0 4px 16px 0 #b5d0f7;
+    }
+    .category-option {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    .metrics-section {
+      margin-top: 2rem;
+      background: var(--color-bg-alt);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    .metrics-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .metric {
+      min-width: 120px;
+      font-size: 1.2rem;
+      color: var(--color-accent);
+      font-weight: 500;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px 0 #e5e7eb;
+      padding: 1.2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .metric-emoji {
+      font-size: 1.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .worklog-section {
+      margin-top: 2.5rem;
+    }
+    .worklog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+    }
+    .worklog-card {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      background: #f7f8fa;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px 0 #e5e7eb;
+      padding: 1.1rem 1rem;
+      font-size: 1.05rem;
+      flex-wrap: wrap;
+    }
+    .worklog-emoji {
+      font-size: 1.6rem;
+      margin-right: 0.7rem;
+    }
+    .worklog-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 120px;
+    }
+    .worklog-date {
+      color: var(--color-text-muted);
+      font-size: 0.98rem;
+    }
+    .worklog-notes {
+      color: var(--color-text-muted);
+      font-size: 0.98rem;
+    }
+    @media (max-width: 700px) {
+      .dashboard-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+      }
+      .metrics-list {
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      .worklog-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+    .modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(30,41,59,0.18);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px 0 #b5d0f7;
+      padding: 2rem 1.5rem;
+      min-width: 320px;
+      max-width: 95vw;
+      color: #23272f;
+      font-family: inherit;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .modal label {
+      display: block;
+      margin-top: 1.1rem;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+      width: 100%;
+      text-align: left;
+    }
+    .modal input, .modal textarea, .modal select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: 1.5px solid #e5e7eb;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 0.7rem;
+      box-sizing: border-box;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.2rem;
+      justify-content: flex-end;
+      width: 100%;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.7rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #6b7280;
+      cursor: pointer;
+    }
+    @media (max-width: 700px) {
+      .modal {
+        min-width: 90vw;
+        padding: 1.2rem 0.5rem;
+      }
+    }
+    .remove-entry-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: #f87171;
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 0.2rem 0.7rem;
+      border-radius: 8px;
+      transition: background 0.18s;
+    }
+    .remove-entry-btn:hover {
+      background: #fee2e2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">Stats by Step</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="how-it-works.html">How It Works</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="who-this-helps.html">Who This Helps</a></li>
+        <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div id="auth-section" style="max-width:400px;margin:2em auto 1em auto;padding:1em;border:1px solid #eee;border-radius:8px;box-shadow:0 2px 8px #eee;background:#fafbfc;">
+      <input type="email" id="user-email" placeholder="Email" style="width:100%;margin-bottom:8px;padding:8px;">
+      <input type="password" id="user-password" placeholder="Password" style="width:100%;margin-bottom:8px;padding:8px;">
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <button id="sign-up-btn" type="button">Sign Up</button>
+        <button id="sign-in-btn" type="button">Sign In</button>
+        <button id="sign-out-btn" type="button" style="display:none;">Sign Out</button>
+      </div>
+      <div id="auth-message" style="color:#555;font-size:0.95em;"></div>
+    </div>
+    <div id="dashboard-content" style="display:none;">
+      <section class="section">
+        <div class="dashboard-top">
+          <div class="category-select">
+            <label for="category">Category</label>
+            <select id="category" class="category-dropdown"></select>
+          </div>
+          <button class="cta-btn" id="share-btn" style="margin-bottom:0.5rem;">Share Metrics & Work Log</button>
+        </div>
+        <h1 style="display:flex;align-items:center;gap:0.7rem;">
+          <span id="category-emoji">🛠️</span>
+          Welcome, [User Name]
+        </h1>
+        <div class="metrics-section" style="margin-top:2rem;">
+          <h2>Your Metrics</h2>
+          <div class="metrics-list" id="metrics-list">
+            <!-- Metrics will be injected here -->
+          </div>
+        </div>
+        <div class="worklog-section">
+          <h2>Activity Log</h2>
+          <div style="color:var(--color-text-muted);margin-bottom:0.7rem;">List type of work done for specificity.</div>
+          <div class="worklog-list" id="worklog-list">
+            <!-- Work log cards will be injected here -->
+          </div>
+          <button class="cta-btn" id="add-entry-btn" style="margin-top:1.2rem;">Add New Entry</button>
+        </div>
+        <div class="dashboard-actions" style="margin-top:2.5rem; display:flex; gap:1.5rem; flex-wrap:wrap;">
+          <a href="https://theprojectctrl.com" class="cta-btn" target="_blank" rel="noopener">Order Custom Flyer</a>
+          <a href="https://theprojectctrl.com" class="secondary-btn" target="_blank" rel="noopener">Buy Business Marketing Tools</a>
+        </div>
+      </section>
+      <!-- Modal for Add Entry -->
+      <div class="modal-bg" id="modal-bg">
+        <form class="modal" id="add-entry-form" autocomplete="off">
+          <button type="button" class="modal-close" id="modal-close">×</button>
+          <h2 style="margin-bottom: 0.5rem;">Add New Activity</h2>
+          <label for="entry-date">Date</label>
+          <input type="date" id="entry-date" name="entry-date" required>
+          <label for="entry-task">Task Name</label>
+          <input id="entry-task" name="entry-task" required autocomplete="off">
+          <label for="entry-notes">Additional Notes</label>
+          <textarea id="entry-notes" name="entry-notes" rows="2" placeholder="E.g. Painted 3 rooms, fixed leaky faucet, etc."></textarea>
+          <label for="entry-hours">Hours Worked (optional)</label>
+          <input type="number" id="entry-hours" name="entry-hours" min="0" step="0.1">
+          <div class="modal-actions">
+            <button type="button" class="secondary-btn" id="modal-cancel">Cancel</button>
+            <button type="submit" class="cta-btn">Add Entry</button>
+          </div>
+        </form>
+      </div>
+      <!-- Add share modal -->
+      <div class="modal-bg" id="share-modal-bg">
+        <div class="modal" id="share-modal">
+          <button class="modal-close" id="close-share-modal">&times;</button>
+          <h3>Share Your Progress</h3>
+          <button class="cta-btn" id="copy-metrics">Copy to Clipboard</button>
+          <button class="cta-btn" id="download-csv">Download CSV</button>
+          <p style="margin-top:1rem;font-size:0.98rem;color:#6b7280;">(More sharing options coming soon!)</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-content">
+      <span>&copy; 2024 Stats by Step</span>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <!-- Firebase Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Firebase Analytics (optional) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+  <!-- Your main.js -->
+  <script src="assets/js/main.js"></script>
+  <script>
+    // Demo work logs for every category
+    const workLogs = {
+      'Hairstylist': [
+        { emoji: '💇‍♂️', date: '2024-06-01', task: 'Haircut', hours: 2, notes: 'First-time client' },
+        { emoji: '✂️', date: '2024-06-02', task: 'Braiding', hours: 1.5, notes: 'Repeat customer' }
+      ],
+      'Lawncare': [
+        { emoji: '🌱', date: '2024-06-01', task: 'Mowing', hours: 3, notes: 'Front/back yard' },
+        { emoji: '🌳', date: '2024-06-03', task: 'Tree trimming', hours: 2, notes: 'Large oak' }
+      ],
+      'Mechanic': [
+        { emoji: '🔧', date: '2024-06-01', task: 'Oil Change', hours: 1, notes: 'Honda Civic' },
+        { emoji: '🧩', date: '2024-06-02', task: 'Brake Replacement', hours: 2, notes: 'Toyota Camry' }
+      ],
+      'Farmer': [
+        { emoji: '🚜', date: '2024-06-01', task: 'Planted corn', hours: 4, notes: '2 acres' },
+        { emoji: '🥕', date: '2024-06-03', task: 'Harvested carrots', hours: 3, notes: '500 lbs' }
+      ],
+      'Carpenter': [
+        { emoji: '🪚', date: '2024-06-01', task: 'Built bookshelf', hours: 5, notes: 'Oak wood' }
+      ],
+      'Chef': [
+        { emoji: '👨‍🍳', date: '2024-06-01', task: 'Catered event', hours: 6, notes: 'Wedding' }
+      ],
+      'Cleaner': [
+        { emoji: '🧹', date: '2024-06-01', task: 'Office cleaning', hours: 2, notes: 'After hours' }
+      ],
+      'Electrician': [
+        { emoji: '💡', date: '2024-06-01', task: 'Wired new lights', hours: 3, notes: 'Kitchen' }
+      ],
+      'Family Helper': [
+        { emoji: '🤗', date: '2024-06-01', task: 'Babysitting', hours: 4, notes: 'Evening shift' }
+      ],
+      'Gig Worker': [
+        { emoji: '💼', date: '2024-06-01', task: 'Delivery', hours: 2, notes: 'Downtown' }
+      ],
+      'HVAC Technician': [
+        { emoji: '❄️', date: '2024-06-01', task: 'AC maintenance', hours: 2, notes: 'Summer check' }
+      ],
+      'Janitorial': [
+        { emoji: '🧽', date: '2024-06-01', task: 'Floor waxing', hours: 3, notes: 'School gym' }
+      ],
+      'Medical Aide': [
+        { emoji: '🩺', date: '2024-06-01', task: 'Patient care', hours: 8, notes: 'Day shift' }
+      ],
+      'Painter': [
+        { emoji: '🎨', date: '2024-06-01', task: 'Room painting', hours: 5, notes: 'Blue walls' }
+      ],
+      'Photographer': [
+        { emoji: '📸', date: '2024-06-01', task: 'Portrait session', hours: 2, notes: 'Family of 4' }
+      ],
+      'Plumber': [
+        { emoji: '🚰', date: '2024-06-01', task: 'Fix leak', hours: 1, notes: 'Kitchen sink' }
+      ],
+      'Security Guard': [
+        { emoji: '🛡️', date: '2024-06-01', task: 'Night patrol', hours: 8, notes: 'Warehouse' }
+      ],
+      'Small Business Owner': [
+        { emoji: '🏪', date: '2024-06-01', task: 'Opened new store', hours: 10, notes: 'Grand opening' }
+      ],
+      'Student Helper': [
+        { emoji: '🎒', date: '2024-06-01', task: 'Tutoring', hours: 2, notes: 'Math homework' }
+      ],
+      'Truck Driver': [
+        { emoji: '🚚', date: '2024-06-01', task: 'Long haul', hours: 12, notes: 'Interstate' }
+      ],
+      'Welder': [
+        { emoji: '⚒️', date: '2024-06-01', task: 'Pipe welding', hours: 4, notes: 'Industrial site' }
+      ]
+    };
+    // Metrics config for each category
+    const metricsConfig = {
+      'Hairstylist': [
+        { emoji: '💇‍♂️', label: 'Clients Served', key: 'clients' },
+        { emoji: '🔁', label: 'Repeat Rate', key: 'repeat' },
+        { emoji: '✂️', label: 'Styles Performed', key: 'styles' }
+      ],
+      'Lawncare': [
+        { emoji: '🌱', label: 'Jobs Completed', key: 'jobs' },
+        { emoji: '⏱️', label: 'Equipment Hours', key: 'hours' }
+      ],
+      'Mechanic': [
+        { emoji: '🔧', label: 'Repairs Done', key: 'repairs' },
+        { emoji: '🧩', label: 'Parts Replaced', key: 'parts' }
+      ],
+      'Farmer': [
+        { emoji: '🚜', label: 'Tasks Completed', key: 'tasks' },
+        { emoji: '🥕', label: 'Produce Harvested', key: 'produce' }
+      ],
+      // ...add more as needed...
+    };
+    // Chart.js instance
+    let chart;
+    function updateMetricsAndWorklog() {
+      const catSelect = document.getElementById('category');
+      const selected = catSelect.options[catSelect.selectedIndex].value;
+      const logs = workLogs[selected] || [];
+      // Metrics calculation (demo: count entries, sum hours, etc.)
+      let metrics = [];
+      if (metricsConfig[selected]) {
+        metrics = metricsConfig[selected].map(m => {
+          if (m.key === 'clients' || m.key === 'jobs' || m.key === 'repairs' || m.key === 'tasks') {
+            return { emoji: m.emoji, label: m.label, value: logs.length };
+          } else if (m.key === 'repeat') {
+            // Demo: percent of tasks with 'Repeat' in notes
+            const repeat = logs.filter(l => /repeat/i.test(l.notes)).length;
+            return { emoji: m.emoji, label: m.label, value: logs.length ? Math.round((repeat/logs.length)*100)+'%' : '0%' };
+          } else if (m.key === 'hours') {
+            const total = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
+            return { emoji: m.emoji, label: m.label, value: total };
+          } else if (m.key === 'styles') {
+            // Demo: count unique tasks
+            const styles = new Set(logs.map(l => l.task)).size;
+            return { emoji: m.emoji, label: m.label, value: styles };
+          } else if (m.key === 'parts') {
+            // Demo: count tasks with 'replace' in task
+            const parts = logs.filter(l => /replace/i.test(l.task)).length;
+            return { emoji: m.emoji, label: m.label, value: parts };
+          } else if (m.key === 'produce') {
+            // Demo: sum hours as 'produce' for now
+            const total = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
+            return { emoji: m.emoji, label: m.label, value: total + ' lbs' };
+          }
+          return { emoji: m.emoji, label: m.label, value: '-' };
+        });
+      } else {
+        metrics = [
+          { emoji: '📊', label: 'Entries', value: logs.length },
+          { emoji: '⏱️', label: 'Total Hours', value: logs.reduce((sum, l) => sum + (l.hours || 0), 0) }
+        ];
+      }
+      const metricsList = document.getElementById('metrics-list');
+      metricsList.innerHTML = metrics.map(m => `
+        <div class="metric" style="border-top: 4px solid #e5e7eb;">
+          <span class="metric-emoji">${m.emoji}</span>
+          <span class="metric-label">${m.label}</span>
+          <span>${m.value}</span>
+        </div>
+      `).join('');
+      // Work log with remove button
+      const worklogList = document.getElementById('worklog-list');
+      worklogList.innerHTML = logs.length ? logs.map((l, i) => `
+        <div class="worklog-card">
+          <span class="worklog-emoji">${l.emoji}</span>
+          <div class="worklog-info">
+            <span><strong>${l.task}</strong></span>
+            <span class="worklog-date">${l.date}</span>
+          </div>
+          <div class="worklog-info">
+            <span>Hours: <strong>${l.hours}</strong></span>
+            <span class="worklog-notes">${l.notes}</span>
+          </div>
+          <button class="remove-entry-btn" data-index="${i}" title="Remove entry">🗑️</button>
+        </div>
+      `).join('') : '<div style="color:var(--color-text-muted);">No work log entries yet.</div>';
+      // Chart: group logs by month
+      const monthMap = {};
+      logs.forEach(l => {
+        const month = l.date ? l.date.slice(0,7) : 'Unknown';
+        if (!monthMap[month]) monthMap[month] = 0;
+        monthMap[month] += 1;
+      });
+      const months = Object.keys(monthMap).sort();
+      const values = months.map(m => monthMap[m]);
+      const ctx = document.getElementById('metricsChart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Entries per Month',
+            data: values,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59,130,246,0.08)',
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#3b82f6',
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { title: { display: true, text: 'Month' } },
+            y: { title: { display: true, text: 'Entries' } }
+          }
+        }
+      });
+      // Add remove event listeners
+      document.querySelectorAll('.remove-entry-btn').forEach(btn => {
+        btn.onclick = function() {
+          const idx = parseInt(this.getAttribute('data-index'));
+          if (!isNaN(idx)) {
+            workLogs[selected].splice(idx, 1);
+            updateMetricsAndWorklog();
+          }
+        };
+      });
+    }
+    document.getElementById('category').addEventListener('change', () => {
+      updateMetricsAndWorklog();
+      updateTaskSuggestions();
+    });
+    // Modal logic
+    const modalBg = document.getElementById('modal-bg');
+    const addEntryBtn = document.getElementById('add-entry-btn');
+    const modalClose = document.getElementById('modal-close');
+    const modalCancel = document.getElementById('modal-cancel');
+    addEntryBtn.onclick = () => { modalBg.classList.add('active'); };
+    modalClose.onclick = modalCancel.onclick = () => { modalBg.classList.remove('active'); };
+    // Add entry form
+    document.getElementById('add-entry-form').onsubmit = function(e) {
+      e.preventDefault();
+      const catSelect = document.getElementById('category');
+      const selected = catSelect.options[catSelect.selectedIndex].value;
+      const emoji = catSelect.options[catSelect.selectedIndex].getAttribute('data-emoji') || '📝';
+      const date = document.getElementById('entry-date').value;
+      const task = document.getElementById('entry-task').value;
+      const hours = parseFloat(document.getElementById('entry-hours').value);
+      const notes = document.getElementById('entry-notes').value;
+      if (!workLogs[selected]) workLogs[selected] = [];
+      workLogs[selected].push({ emoji, date, task, hours, notes });
+      modalBg.classList.remove('active');
+      this.reset();
+      updateMetricsAndWorklog();
+    };
+    // Initial load
+    updateMetricsAndWorklog();
+    // Sample task suggestions per category
+    const taskSamples = {
+      'Hairstylist': ['Haircut', 'Braiding', 'Coloring', 'Styling'],
+      'Lawncare': ['Mowing', 'Tree trimming', 'Edging', 'Weeding'],
+      'Mechanic': ['Oil Change', 'Brake Replacement', 'Engine Repair', 'Tire Rotation'],
+      'Farmer': ['Planted corn', 'Harvested carrots', 'Fed livestock', 'Irrigation'],
+      'Carpenter': ['Built bookshelf', 'Installed door', 'Cabinet making', 'Deck repair'],
+      'Chef': ['Catered event', 'Meal prep', 'Private dinner', 'Menu planning'],
+      'Cleaner': ['Office cleaning', 'Window washing', 'Floor mopping', 'Sanitizing'],
+      'Electrician': ['Wired new lights', 'Outlet install', 'Panel upgrade', 'Troubleshooting'],
+      'Family Helper': ['Babysitting', 'Errands', 'Meal prep', 'House sitting'],
+      'Gig Worker': ['Delivery', 'Rideshare', 'Moving help', 'Handyman'],
+      'HVAC Technician': ['AC maintenance', 'Heater repair', 'Filter change', 'System install'],
+      'Janitorial': ['Floor waxing', 'Trash removal', 'Restroom cleaning', 'Carpet shampoo'],
+      'Medical Aide': ['Patient care', 'Medication', 'Vitals check', 'Mobility assist'],
+      'Painter': ['Room painting', 'Touch up', 'Exterior paint', 'Trim work'],
+      'Photographer': ['Portrait session', 'Event shoot', 'Editing', 'Product photos'],
+      'Plumber': ['Fix leak', 'Install faucet', 'Drain cleaning', 'Pipe repair'],
+      'Security Guard': ['Night patrol', 'Access control', 'Incident report', 'Surveillance'],
+      'Small Business Owner': ['Opened new store', 'Inventory', 'Staff meeting', 'Marketing'],
+      'Student Helper': ['Tutoring', 'Homework help', 'Project assist', 'Note taking'],
+      'Truck Driver': ['Long haul', 'Local delivery', 'Load/unload', 'Route planning'],
+      'Welder': ['Pipe welding', 'Frame assembly', 'Sheet metal', 'Safety check']
+    };
+    function updateTaskSuggestions() {
+      const catSelect = document.getElementById('category');
+      const selected = catSelect.options[catSelect.selectedIndex].value;
+      const datalist = document.getElementById('task-suggestions');
+      datalist.innerHTML = (taskSamples[selected] || []).map(t => `<option value="${t}">`).join('');
+    }
+    // Also update suggestions when modal opens
+    document.getElementById('add-entry-btn').addEventListener('click', updateTaskSuggestions);
+  </script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLcNzM39-Uw1QPZBqxfzen4zCwyDPA3H0",
+      authDomain: "stats-by-step-logs.firebaseapp.com",
+      projectId: "stats-by-step-logs",
+      storageBucket: "stats-by-step-logs.appspot.com",
+      messagingSenderId: "259144385840",
+      appId: "1:259144385840:web:600fe00c8a889a376ab4f5",
+      measurementId: "G-70CV9BPEQC"
+    };
+    firebase.initializeApp(firebaseConfig);
+    if (firebase.analytics) {
+      firebase.analytics();
+    }
+  </script>
+</body>
+</html> 

@@ -1,0 +1,287 @@
+/* Import Satoshi or similar font from Google Fonts or use fallback */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+:root {
+  --color-bg: #fff;
+  --color-bg-alt: #f7f8fa;
+  --color-text: #1a1d23;
+  --color-text-muted: #6b7280;
+  --color-accent: #3b82f6;
+  --color-nav: #fff;
+  --color-nav-shadow: 0 2px 16px 0 rgba(30, 41, 59, 0.06);
+  --color-btn: #3b82f6;
+  --color-btn-hover: #2563eb;
+  --color-btn-text: #fff;
+  --color-btn-outline: #e5e7eb;
+  --radius: 14px;
+  --shadow: 0 2px 12px 0 rgba(30, 41, 59, 0.06);
+  --transition: 0.18s cubic-bezier(.4,0,.2,1);
+  --font-main: 'Inter', Arial, sans-serif;
+}
+[data-theme="dark"] {
+  --color-bg: #181a20;
+  --color-bg-alt: #23262f;
+  --color-text: #f7f8fa;
+  --color-text-muted: #b0b3bb;
+  --color-accent: #60a5fa;
+  --color-nav: #23262f;
+  --color-nav-shadow: 0 2px 16px 0 rgba(30, 41, 59, 0.18);
+  --color-btn: #60a5fa;
+  --color-btn-hover: #3b82f6;
+  --color-btn-text: #23262f;
+  --color-btn-outline: #23262f;
+}
+html, body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 400;
+  transition: background var(--transition), color var(--transition);
+}
+header {
+  background: var(--color-nav);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--color-nav-shadow);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.5rem 2rem;
+  min-height: 64px;
+  background: transparent;
+}
+.logo {
+  font-weight: 500;
+  font-size: 1.3rem;
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2.2rem;
+  margin: 0;
+  padding: 0;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 400;
+  font-size: 1.05rem;
+  border-radius: 10px;
+  padding: 0.3rem 0.8rem;
+  transition: color var(--transition), background var(--transition);
+  position: relative;
+}
+.nav-links a.active, .nav-links a:hover, .nav-links a:focus {
+  color: var(--color-accent);
+  background: var(--color-bg-alt);
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.cta-btn, .secondary-btn, button.cta-btn {
+  background: var(--color-btn);
+  color: var(--color-btn-text);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  box-shadow: none;
+  transition: background var(--transition), color var(--transition), box-shadow var(--transition), transform var(--transition);
+  outline: none;
+  cursor: pointer;
+}
+.cta-btn:hover, button.cta-btn:hover {
+  background: var(--color-btn-hover);
+  color: var(--color-btn-text);
+}
+.secondary-btn {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1.5px solid var(--color-btn-outline);
+  font-weight: 500;
+}
+.secondary-btn:hover {
+  background: var(--color-bg-alt);
+  color: var(--color-accent);
+}
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-size: 1.3rem;
+  margin-left: 1.2rem;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.3rem;
+  transition: background var(--transition), color var(--transition);
+}
+.theme-toggle:hover {
+  background: var(--color-bg-alt);
+}
+.hero {
+  text-align: center;
+  padding: 6rem 1rem 3rem 1rem;
+  background: var(--color-bg);
+  position: relative;
+}
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+  color: var(--color-text);
+  letter-spacing: 0.01em;
+}
+.hero p {
+  font-size: 1.15rem;
+  color: var(--color-text-muted);
+  margin-bottom: 2.2rem;
+  font-weight: 400;
+}
+.hero-cta {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  z-index: 1;
+  position: relative;
+}
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1rem 2.5rem 1rem;
+  text-align: center;
+}
+.section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+.card, .category-card, .testimonial {
+  background: var(--color-bg-alt);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem 1.5rem;
+  transition: box-shadow var(--transition), transform var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.card:hover, .category-card:hover, .testimonial:hover {
+  box-shadow: 0 8px 32px 0 rgba(30,41,59,0.10);
+  transform: translateY(-4px) scale(1.03);
+}
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.category-card .icon {
+  font-size: 1.7rem;
+  margin-bottom: 0.5rem;
+}
+.metrics-section {
+  background: var(--color-bg-alt);
+  padding: 2.5rem 1rem;
+  margin: 2rem 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.metrics-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+.metric {
+  min-width: 120px;
+  font-size: 1.2rem;
+  color: var(--color-accent);
+  font-weight: 500;
+}
+.metric-label {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+  font-weight: 400;
+}
+footer {
+  background: var(--color-nav);
+  border-top: 1px solid #e5e7eb;
+  padding: 2rem 0 1.5rem 0;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+.footer-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+}
+.social-links a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+.social-links a:hover {
+  color: var(--color-btn-hover);
+}
+@media (max-width: 900px) {
+  .navbar {
+    max-width: 98vw;
+    padding: 0.5rem 0.5rem;
+    gap: 1rem;
+  }
+  .metrics-list {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .hero {
+    padding: 3.5rem 0.5rem 2rem 0.5rem;
+  }
+  .section, .metrics-section {
+    padding: 1.2rem 0.5rem;
+    margin: 1.2rem auto;
+  }
+  .category-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .card, .category-card, .testimonial {
+    width: 100%;
+    padding: 1.2rem 0.5rem;
+    min-width: unset;
+    max-width: unset;
+  }
+}
+/* Hide desktop nav on mobile, show mobile nav */
+@media (max-width: 700px) {
+  .navbar {
+    display: none;
+  }
+} 
