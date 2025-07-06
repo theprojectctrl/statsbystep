@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How It Works - Stats by Step</title>
+  <title>How It Works & Who This Helps - Stats by Step</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,32 +17,62 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="how-it-works.html" class="active">How It Works</a></li>
         <li><a href="resources.html">Resources</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
       </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
+        <a href="dashboard.html" class="cta-btn" aria-label="Dashboard">Dashboard</a>
+      </div>
     </nav>
   </header>
   <main>
     <section class="section">
-      <h1>How It Works</h1>
+      <h1>How It Works & Who This Helps</h1>
       <div class="bento-grid">
-        <div class="bento">
-          <h2>1. Sign Up or Sign In</h2>
-          <ul><li>Create your free profile with Google or email.</li></ul>
+        <div class="bento-block">
+          <div class="icon">📝</div>
+          <h2>Sign Up</h2>
+          <p>Create your free account to get started.</p>
         </div>
-        <div class="bento">
-          <h2>2. Track Your Work</h2>
-          <ul><li>Log your jobs, hours, and notes in a simple dashboard.</li></ul>
+        <div class="bento-block">
+          <div class="icon">📂</div>
+          <h2>Choose a Category</h2>
+          <p>Select your trade or profession from our list of 20+ categories.</p>
         </div>
-        <div class="bento">
-          <h2>3. See Your Progress</h2>
-          <ul><li>View metrics and trends that show your growth and value.</li></ul>
+        <div class="bento-block">
+          <div class="icon">📊</div>
+          <h2>Track Your Work</h2>
+          <p>Log your daily work and see your stats update instantly.</p>
         </div>
-        <div class="bento">
-          <h2>4. Share & Promote</h2>
-          <ul><li>Download, share, or print your work log and metrics. Order custom flyers or recaps.</li></ul>
+        <div class="bento-block">
+          <div class="icon">🎟️</div>
+          <h2>Order Flyers/Recaps</h2>
+          <p>Purchase custom business flyers or impact recaps to promote your work.</p>
+        </div>
+        <div class="bento-block">
+          <div class="icon">🚀</div>
+          <h2>Grow Your Business</h2>
+          <p>Use your data and flyers to attract more clients and opportunities.</p>
+        </div>
+        <div class="bento-block">
+          <div class="icon">🤝</div>
+          <h2>Who This Helps</h2>
+          <ul class="bento-list">
+            <li>Tradespeople (hairstylists, mechanics, plumbers, etc.)</li>
+            <li>Farmers, landscapers, rural workers</li>
+            <li>Janitorial, cleaning, security staff</li>
+            <li>Medical aides, caregivers, family helpers</li>
+            <li>Gig workers, freelancers, small business owners</li>
+            <li>Students and family supporters</li>
+          </ul>
+        </div>
+        <div class="bento-block bento-founder">
+          <div class="icon">👩‍💼</div>
+          <h2>About the Founder</h2>
+          <p><strong>Amanda Ramirez</strong> — Founder of Stats by Step</p>
+          <p>[Your story and details here. Share your background, mission, and why you started Stats by Step.]</p>
         </div>
       </div>
-      <a href="dashboard.html" class="cta-btn" style="margin-top:2rem;">Get Started</a>
+      <a href="getting-started.html" class="cta-btn" style="margin-top:2rem;">Get Started</a>
     </section>
   </main>
   <footer>
@@ -55,42 +85,5 @@
     </div>
   </footer>
   <script src="assets/js/main.js"></script>
-  <style>
-  .bento-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-top: 2.5rem;
-  }
-  .bento {
-    background: #f7f8fa;
-    border-radius: 18px;
-    box-shadow: 0 2px 8px 0 #e5e7eb;
-    padding: 2rem 1.5rem;
-    min-width: 260px;
-    flex: 1 1 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .bento h2 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-  }
-  .bento ul {
-    list-style: disc inside;
-    padding-left: 1.2rem;
-    margin: 0;
-  }
-  .bento li {
-    margin-bottom: 0.7rem;
-    font-size: 1.05rem;
-    color: #23272f;
-  }
-  @media (max-width: 900px) {
-    .bento-grid { flex-direction: column; gap: 1.2rem; }
-    .bento { min-width: 0; width: 100%; }
-  }
-  </style>
 </body>
 </html> 

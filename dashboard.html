@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     .dashboard-top {
       display: flex;
@@ -197,6 +199,14 @@
       color: #6b7280;
       cursor: pointer;
     }
+    .chart-section {
+      margin-top: 2.5rem;
+      background: var(--color-bg-alt);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1rem;
+      text-align: center;
+    }
     @media (max-width: 700px) {
       .modal {
         min-width: 90vw;
@@ -227,86 +237,88 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="how-it-works.html">How It Works</a></li>
         <li><a href="resources.html">Resources</a></li>
-        <li><a href="who-this-helps.html">Who This Helps</a></li>
-        <li><a href="dashboard.html" class="active">Dashboard</a></li>
       </ul>
       <div class="nav-actions">
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
+        <a href="dashboard.html" class="cta-btn" aria-label="Dashboard">Dashboard</a>
       </div>
     </nav>
   </header>
   <main>
-    <div id="auth-section" style="max-width:400px;margin:2em auto 1em auto;padding:1em;border:1px solid #eee;border-radius:8px;box-shadow:0 2px 8px #eee;background:#fafbfc;">
-      <input type="email" id="user-email" placeholder="Email" style="width:100%;margin-bottom:8px;padding:8px;">
-      <input type="password" id="user-password" placeholder="Password" style="width:100%;margin-bottom:8px;padding:8px;">
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <button id="sign-up-btn" type="button">Sign Up</button>
-        <button id="sign-in-btn" type="button">Sign In</button>
-        <button id="sign-out-btn" type="button" style="display:none;">Sign Out</button>
-      </div>
-      <div id="auth-message" style="color:#555;font-size:0.95em;"></div>
-    </div>
-    <div id="dashboard-content" style="display:none;">
-      <section class="section">
-        <div class="dashboard-top">
-          <div class="category-select">
-            <label for="category">Category</label>
-            <select id="category" class="category-dropdown"></select>
-          </div>
-          <button class="cta-btn" id="share-btn" style="margin-bottom:0.5rem;">Share Metrics & Work Log</button>
+    <section class="section">
+      <h1>Welcome</h1>
+      <div class="dashboard-top">
+        <div class="category-select">
+          <label for="category">Select Category:</label>
+          <select id="category" class="category-dropdown" name="category">
+            <option value="Carpenter" data-emoji="🪚" data-color="#fbbf24">🪚 Carpenter</option>
+            <option value="Chef" data-emoji="👨‍🍳" data-color="#f87171">👨‍🍳 Chef</option>
+            <option value="Cleaner" data-emoji="🧹" data-color="#60a5fa">🧹 Cleaner</option>
+            <option value="Electrician" data-emoji="💡" data-color="#f59e42">💡 Electrician</option>
+            <option value="Family Helper" data-emoji="🤗" data-color="#a78bfa">🤗 Family Helper</option>
+            <option value="Farmer" data-emoji="🚜" data-color="#34d399">🚜 Farmer</option>
+            <option value="Gig Worker" data-emoji="💼" data-color="#f472b6">💼 Gig Worker</option>
+            <option value="Hairstylist" data-emoji="💇‍♂️" data-color="#f472b6">💇‍♂️ Hairstylist</option>
+            <option value="HVAC Technician" data-emoji="❄️" data-color="#38bdf8">❄️ HVAC Technician</option>
+            <option value="Janitorial" data-emoji="🧽" data-color="#fbbf24">🧽 Janitorial</option>
+            <option value="Lawncare" data-emoji="🌱" data-color="#34d399">🌱 Lawncare</option>
+            <option value="Mechanic" data-emoji="🔧" data-color="#818cf8">🔧 Mechanic</option>
+            <option value="Medical Aide" data-emoji="🩺" data-color="#f87171">🩺 Medical Aide</option>
+            <option value="Painter" data-emoji="🎨" data-color="#fbbf24">🎨 Painter</option>
+            <option value="Photographer" data-emoji="📸" data-color="#f59e42">📸 Photographer</option>
+            <option value="Plumber" data-emoji="🚰" data-color="#60a5fa">🚰 Plumber</option>
+            <option value="Security Guard" data-emoji="🛡️" data-color="#818cf8">🛡️ Security Guard</option>
+            <option value="Small Business Owner" data-emoji="🏪" data-color="#a78bfa">🏪 Small Business Owner</option>
+            <option value="Student Helper" data-emoji="🎒" data-color="#fbbf24">🎒 Student Helper</option>
+            <option value="Truck Driver" data-emoji="🚚" data-color="#34d399">🚚 Truck Driver</option>
+            <option value="Welder" data-emoji="⚒️" data-color="#f59e42">⚒️ Welder</option>
+          </select>
         </div>
-        <h1 style="display:flex;align-items:center;gap:0.7rem;">
-          <span id="category-emoji">🛠️</span>
-          Welcome, [User Name]
-        </h1>
+      </div>
+      <div id="dashboard-export-area">
         <div class="metrics-section" style="margin-top:2rem;">
           <h2>Your Metrics</h2>
+          <div style="display:flex; gap:1rem; justify-content:center; margin-bottom:1rem;">
+            <button class="secondary-btn" id="download-metrics-image">Download as Image</button>
+            <button class="secondary-btn" id="download-metrics-csv">Download as CSV</button>
+          </div>
           <div class="metrics-list" id="metrics-list">
             <!-- Metrics will be injected here -->
           </div>
         </div>
+        <button id="make-copy-btn" class="cta-btn" style="margin-top:1.5rem;">Make New Copy</button>
         <div class="worklog-section">
-          <h2>Activity Log</h2>
-          <div style="color:var(--color-text-muted);margin-bottom:0.7rem;">List type of work done for specificity.</div>
+          <h2>Work Log</h2>
           <div class="worklog-list" id="worklog-list">
             <!-- Work log cards will be injected here -->
           </div>
           <button class="cta-btn" id="add-entry-btn" style="margin-top:1.2rem;">Add New Entry</button>
         </div>
-        <div class="dashboard-actions" style="margin-top:2.5rem; display:flex; gap:1.5rem; flex-wrap:wrap;">
-          <a href="https://theprojectctrl.com" class="cta-btn" target="_blank" rel="noopener">Order Custom Flyer</a>
-          <a href="https://theprojectctrl.com" class="secondary-btn" target="_blank" rel="noopener">Buy Business Marketing Tools</a>
-        </div>
-      </section>
-      <!-- Modal for Add Entry -->
-      <div class="modal-bg" id="modal-bg">
-        <form class="modal" id="add-entry-form" autocomplete="off">
-          <button type="button" class="modal-close" id="modal-close">×</button>
-          <h2 style="margin-bottom: 0.5rem;">Add New Activity</h2>
-          <label for="entry-date">Date</label>
-          <input type="date" id="entry-date" name="entry-date" required>
-          <label for="entry-task">Task Name</label>
-          <input id="entry-task" name="entry-task" required autocomplete="off">
-          <label for="entry-notes">Additional Notes</label>
-          <textarea id="entry-notes" name="entry-notes" rows="2" placeholder="E.g. Painted 3 rooms, fixed leaky faucet, etc."></textarea>
-          <label for="entry-hours">Hours Worked (optional)</label>
-          <input type="number" id="entry-hours" name="entry-hours" min="0" step="0.1">
-          <div class="modal-actions">
-            <button type="button" class="secondary-btn" id="modal-cancel">Cancel</button>
-            <button type="submit" class="cta-btn">Add Entry</button>
-          </div>
-        </form>
       </div>
-      <!-- Add share modal -->
-      <div class="modal-bg" id="share-modal-bg">
-        <div class="modal" id="share-modal">
-          <button class="modal-close" id="close-share-modal">&times;</button>
-          <h3>Share Your Progress</h3>
-          <button class="cta-btn" id="copy-metrics">Copy to Clipboard</button>
-          <button class="cta-btn" id="download-csv">Download CSV</button>
-          <p style="margin-top:1rem;font-size:0.98rem;color:#6b7280;">(More sharing options coming soon!)</p>
-        </div>
+      <div class="dashboard-actions" style="margin-top:2.5rem; display:flex; gap:1.5rem; flex-wrap:wrap;">
+        <a href="https://theprojectctrl.com" class="cta-btn" target="_blank" rel="noopener">Order Custom Flyer</a>
+        <a href="https://theprojectctrl.com" class="secondary-btn" target="_blank" rel="noopener">Buy Business Marketing Tools</a>
       </div>
+    </section>
+    <!-- Modal for Add Entry -->
+    <div class="modal-bg" id="modal-bg">
+      <form class="modal" id="add-entry-form" autocomplete="off">
+        <button type="button" class="modal-close" id="modal-close">×</button>
+        <h2 style="margin-bottom: 0.5rem;">Add New Work Log Entry</h2>
+        <label for="entry-date">Date</label>
+        <input type="date" id="entry-date" name="entry-date" required>
+        <label for="entry-task">Task</label>
+        <input list="task-suggestions" id="entry-task" name="entry-task" required autocomplete="off">
+        <datalist id="task-suggestions"></datalist>
+        <label for="entry-hours">Hours</label>
+        <input type="number" id="entry-hours" name="entry-hours" min="0" step="0.1" required>
+        <label for="entry-notes">Notes</label>
+        <textarea id="entry-notes" name="entry-notes" rows="2"></textarea>
+        <div class="modal-actions">
+          <button type="button" class="secondary-btn" id="modal-cancel">Cancel</button>
+          <button type="submit" class="cta-btn">Add Entry</button>
+        </div>
+      </form>
     </div>
   </main>
   <footer>
@@ -318,15 +330,6 @@
       </div>
     </div>
   </footer>
-  <!-- Firebase App (the core Firebase SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <!-- Firebase Auth -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <!-- Firebase Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <!-- Firebase Analytics (optional) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
-  <!-- Your main.js -->
   <script src="assets/js/main.js"></script>
   <script>
     // Demo work logs for every category
@@ -422,10 +425,37 @@
     };
     // Chart.js instance
     let chart;
+    // === LocalStorage Work Log Logic ===
+    // Get unique dashboard ID from URL or generate one
+    function getDashboardId() {
+      const url = new URL(window.location.href);
+      let id = url.searchParams.get('id');
+      if (!id) {
+        id = Math.random().toString(36).substr(2, 9); // random short id
+        window.location.search = '?id=' + id;
+      }
+      return id;
+    }
+    const DASHBOARD_ID = getDashboardId();
+    const STORAGE_KEY = 'worklogs_' + DASHBOARD_ID;
+
+    // Load logs from localStorage
+    function loadLogs() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    }
+    // Save logs to localStorage
+    function saveLogs(logs) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+    }
+
+    // Patch updateMetricsAndWorklog to use localStorage logs
     function updateMetricsAndWorklog() {
       const catSelect = document.getElementById('category');
       const selected = catSelect.options[catSelect.selectedIndex].value;
-      const logs = workLogs[selected] || [];
+      // Load logs from localStorage
+      const allLogs = loadLogs();
+      // Filter logs for this category
+      const logs = allLogs.filter(l => l.category === selected);
       // Metrics calculation (demo: count entries, sum hours, etc.)
       let metrics = [];
       if (metricsConfig[selected]) {
@@ -433,22 +463,18 @@
           if (m.key === 'clients' || m.key === 'jobs' || m.key === 'repairs' || m.key === 'tasks') {
             return { emoji: m.emoji, label: m.label, value: logs.length };
           } else if (m.key === 'repeat') {
-            // Demo: percent of tasks with 'Repeat' in notes
             const repeat = logs.filter(l => /repeat/i.test(l.notes)).length;
             return { emoji: m.emoji, label: m.label, value: logs.length ? Math.round((repeat/logs.length)*100)+'%' : '0%' };
           } else if (m.key === 'hours') {
             const total = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
             return { emoji: m.emoji, label: m.label, value: total };
           } else if (m.key === 'styles') {
-            // Demo: count unique tasks
             const styles = new Set(logs.map(l => l.task)).size;
             return { emoji: m.emoji, label: m.label, value: styles };
           } else if (m.key === 'parts') {
-            // Demo: count tasks with 'replace' in task
             const parts = logs.filter(l => /replace/i.test(l.task)).length;
             return { emoji: m.emoji, label: m.label, value: parts };
           } else if (m.key === 'produce') {
-            // Demo: sum hours as 'produce' for now
             const total = logs.reduce((sum, l) => sum + (l.hours || 0), 0);
             return { emoji: m.emoji, label: m.label, value: total + ' lbs' };
           }
@@ -524,16 +550,29 @@
         btn.onclick = function() {
           const idx = parseInt(this.getAttribute('data-index'));
           if (!isNaN(idx)) {
-            workLogs[selected].splice(idx, 1);
+            // Remove from allLogs for this category
+            const allLogs = loadLogs();
+            // Find the i-th log for this category in allLogs
+            let catCount = -1;
+            for (let j = 0; j < allLogs.length; j++) {
+              if (allLogs[j].category === selected) catCount++;
+              if (catCount === idx) {
+                allLogs.splice(j, 1);
+                break;
+              }
+            }
+            saveLogs(allLogs);
             updateMetricsAndWorklog();
           }
         };
       });
     }
+
     document.getElementById('category').addEventListener('change', () => {
       updateMetricsAndWorklog();
       updateTaskSuggestions();
     });
+
     // Modal logic
     const modalBg = document.getElementById('modal-bg');
     const addEntryBtn = document.getElementById('add-entry-btn');
@@ -551,14 +590,23 @@
       const task = document.getElementById('entry-task').value;
       const hours = parseFloat(document.getElementById('entry-hours').value);
       const notes = document.getElementById('entry-notes').value;
-      if (!workLogs[selected]) workLogs[selected] = [];
-      workLogs[selected].push({ emoji, date, task, hours, notes });
+      // Load all logs, append new log
+      const allLogs = loadLogs();
+      allLogs.push({ emoji, date, task, hours, notes, category: selected });
+      saveLogs(allLogs);
       modalBg.classList.remove('active');
       this.reset();
       updateMetricsAndWorklog();
     };
     // Initial load
     updateMetricsAndWorklog();
+
+    // Make New Copy button logic
+    document.getElementById('make-copy-btn').onclick = function() {
+      const newId = Math.random().toString(36).substr(2, 9);
+      window.location.href = 'dashboard.html?id=' + newId;
+    };
+
     // Sample task suggestions per category
     const taskSamples = {
       'Hairstylist': ['Haircut', 'Braiding', 'Coloring', 'Styling'],
@@ -591,21 +639,6 @@
     }
     // Also update suggestions when modal opens
     document.getElementById('add-entry-btn').addEventListener('click', updateTaskSuggestions);
-  </script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLcNzM39-Uw1QPZBqxfzen4zCwyDPA3H0",
-      authDomain: "stats-by-step-logs.firebaseapp.com",
-      projectId: "stats-by-step-logs",
-      storageBucket: "stats-by-step-logs.appspot.com",
-      messagingSenderId: "259144385840",
-      appId: "1:259144385840:web:600fe00c8a889a376ab4f5",
-      measurementId: "G-70CV9BPEQC"
-    };
-    firebase.initializeApp(firebaseConfig);
-    if (firebase.analytics) {
-      firebase.analytics();
-    }
   </script>
 </body>
 </html> 
